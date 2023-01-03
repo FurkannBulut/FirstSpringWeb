@@ -8,6 +8,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
+import java.util.List;
 
 @RestController
 @RequestMapping(value = "konu")
@@ -15,15 +16,15 @@ import java.util.ArrayList;
 public class KonuController {
     private KonuRepo repo;
 
-    public KonuController()
+    public KonuController(KonuRepo repo)
     {
-        this.repo = new KonuRepo();
+        this.repo = repo;
     }
     @GetMapping(path = "getAll", produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<ArrayList<Konu>> getAll()
+    public ResponseEntity<List<Konu>> getAll()
     {
         // localhost:9090/FirstRestfulService/konu/getAll
-        ArrayList<Konu> res = repo.getALl();
+        List<Konu> res = repo.getALl();
         if (res == null || res.size() == 0)
         {
             return ResponseEntity.status(HttpStatus.NO_CONTENT).build();

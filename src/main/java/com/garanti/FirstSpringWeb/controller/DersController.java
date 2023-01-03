@@ -7,111 +7,94 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.ArrayList;
+import java.util.List;
 
 @RestController
 @RequestMapping(value = "ders")
 // localhost:9090/FirstSpringWeb/ders
-public class DersController
-{
+public class DersController {
     private DersRepo repo;
 
-    public DersController()
-    {
-        this.repo = new DersRepo();
+    public DersController(DersRepo repo) {
+        this.repo = repo;
     }
+
     @GetMapping(path = "getAll", produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<ArrayList<Ders>> getAll()
-    {
+    public ResponseEntity<List<Ders>> getAll() {
         // localhost:9090/FirstRestfulService/ders/getAll
-        ArrayList<Ders> res = repo.getAll();
-        if (res == null || res.size() == 0)
-        {
+        List<Ders> res = repo.getAll();
+        if (res == null || res.size() == 0) {
             return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
-        }
-        else
-        {
+        } else {
             return ResponseEntity.ok(res);
         }
     }
+    @GetMapping(path = "findAllByName", produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<List<Ders>> getByIdQueryParam (@RequestParam(value = "name", required = true) String name)
+    {
+        // localhost:9090/FirstSpringWeb/ders/findAllByName?name=a
+        return ResponseEntity.ok(this.repo.getAllLike(name));
+    }
+
     @GetMapping(path = "getByIdHeader", produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<Ders> getByIdHeader(@RequestHeader(name = "id") Integer id)
-    {
+    public ResponseEntity<Ders> getByIdHeader(@RequestHeader(name = "id") Integer id) {
         // localhost:9090/FirstRestfulService/ders/getById?id=1
         Ders res = repo.getById(id);
-        if (res != null)
-        {
+        if (res != null) {
             return ResponseEntity.ok(res);
-        }
-        else
-        {
+        } else {
             return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
         }
     }
+
     @GetMapping(path = "getById", produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<Ders> getByIdQueryParam(@RequestParam(value = "id", required = true) Integer id)
-    {
+    public ResponseEntity<Ders> getByIdQueryParam(@RequestParam(value = "id", required = true) Integer id) {
         // localhost:9090/FirstRestfulService/ders/getById?id=1
         Ders res = repo.getById(id);
-        if (res != null)
-        {
+        if (res != null) {
             return ResponseEntity.ok(res);
-        }
-        else
-        {
+        } else {
             return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
         }
     }
+
     @GetMapping(path = "getById/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<Ders> getByIdPathParam(@PathVariable(value = "id") Integer id)
-    {
+    public ResponseEntity<Ders> getByIdPathParam(@PathVariable(value = "id") Integer id) {
         // localhost:9090/FirstRestfulService/ders/getById/1
         Ders res = repo.getById(id);
-        if (res != null)
-        {
+        if (res != null) {
             return ResponseEntity.ok(res);
-        }
-        else
-        {
+        } else {
             return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
         }
     }
+
     @PostMapping(path = "save", consumes = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<String> save(@RequestBody Ders ders)
-    {
-        if(repo.save(ders))
-        {
+    public ResponseEntity<String> save(@RequestBody Ders ders) {
+        if (repo.save(ders)) {
             return ResponseEntity.status(HttpStatus.CREATED).body("Başarı ile kaydedildi");
-        }
-        else
-        {
+        } else {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Başarı ile kaydedilemedi");
         }
 
     }
+
     @DeleteMapping(path = "deleteById/{id}")
-    public ResponseEntity<String>  deleteById(@PathVariable(value = "id") Integer id)
-    {
+    public ResponseEntity<String> deleteById(@PathVariable(value = "id") Integer id) {
         // localhost:9090/FirstRestfulService/ders/deleteById/1
-        if (repo.deleteById(id))
-        {
+        if (repo.deleteById(id)) {
             return ResponseEntity.ok("Başarı ile silindi");
-        }
-        else
-        {
+        } else {
             return ResponseEntity.internalServerError().body("Başarı ile silinemedi");
         }
     }
+
     @DeleteMapping(path = "deleteByIdHeader")
-    public ResponseEntity<String> deleteByIdHeader(@RequestHeader(value = "id") Integer id)
-    {
+    public ResponseEntity<String> deleteByIdHeader(@RequestHeader(value = "id") Integer id) {
         // localhost:9090/FirstRestfulService/ders/deleteById/1
-        if (repo.deleteById(id))
-        {
+        if (repo.deleteById(id)) {
             return ResponseEntity.ok("Başarı ile silindi");
-        }
-        else
-        {
+        } else {
             return ResponseEntity.internalServerError().body("Başarı ile silinemedi");
         }
     }

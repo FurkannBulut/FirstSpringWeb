@@ -7,7 +7,7 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.ArrayList;
+import java.util.List;
 
 @RestController
 @RequestMapping(value = "ogrenci")
@@ -15,15 +15,15 @@ import java.util.ArrayList;
 public class OgrenciController {
     private OgrenciRepo repo;
 
-    public OgrenciController()
+    public OgrenciController(OgrenciRepo repo)
     {
-        this.repo = new OgrenciRepo();
+        this.repo = repo;
     }
     @GetMapping(path = "getAll",produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<ArrayList<Ogrenci>> getall()
+    public ResponseEntity<List<Ogrenci>> getall()
     {
         // localhost:9090/FirstRestfulService/ogrenci/getAll
-        ArrayList<Ogrenci> res = repo.getAll();
+        List<Ogrenci> res = repo.getAll();
         if (res == null || res.size() == 0)
         {
             return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
@@ -32,6 +32,12 @@ public class OgrenciController {
         {
             return ResponseEntity.ok(res);
         }
+    }
+    @GetMapping(path = "findAllByName", produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<List<Ogrenci>> getByIdQueryParam(@RequestParam(value = "name", required = true) String name)
+    {
+        // localhost:9090/FirstSpringWeb/ogrenci/findAllByName?name=a
+        return ResponseEntity.ok(this.repo.getAllLike(name));
     }
     @GetMapping(path = "getByIdHeader", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Ogrenci> getByIdHeader(@RequestHeader(name = "id") Integer id)

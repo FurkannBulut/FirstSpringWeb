@@ -15,7 +15,8 @@ public class BeansController
 {
     public ApplicationContext applicationContext;
 
-    public BeansController(ApplicationContext applicationContext) {
+    public BeansController(ApplicationContext applicationContext)
+    {
         this.applicationContext = applicationContext;
     }
 

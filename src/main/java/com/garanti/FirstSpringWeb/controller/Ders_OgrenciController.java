@@ -7,7 +7,7 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.ArrayList;
+import java.util.List;
 
 @RestController
 @RequestMapping(value = "ders_ogrenci")
@@ -15,15 +15,15 @@ import java.util.ArrayList;
 public class Ders_OgrenciController {
     private Ders_OgrenciRepo repo;
 
-    public Ders_OgrenciController()
+    public Ders_OgrenciController(Ders_OgrenciRepo repo)
     {
-        this.repo = new Ders_OgrenciRepo();
+        this.repo = repo;
     }
     @GetMapping(path = "getAll", produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<ArrayList<Ders_Ogrenci>> getAll()
+    public ResponseEntity<List<Ders_Ogrenci>> getAll()
     {
         // localhost:9090/FirstRestfulService/ders_ogrenci/getAll
-        ArrayList<Ders_Ogrenci> res = repo.getAll();
+        List<Ders_Ogrenci> res = repo.getAll();
         if (res == null || res.size() == 0)
         {
             return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
@@ -32,6 +32,12 @@ public class Ders_OgrenciController {
         {
             return ResponseEntity.ok(res);
         }
+    }
+    @GetMapping(path = "findAllByName", produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<List<Ders_Ogrenci>> getByIdQueryParam(@RequestParam(value = "name", required = true) String name)
+    {
+        // localhost:9090/FirstSpringWeb/ders_ogrenci/findAllByName?name=a
+        return ResponseEntity.ok(this.repo.getAllLike(name));
     }
     @GetMapping(path = "getByIdHeader", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Ders_Ogrenci> getByIdHeader(@RequestHeader(name = "id") Integer id)
