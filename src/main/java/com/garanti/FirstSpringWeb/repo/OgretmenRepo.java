@@ -70,7 +70,7 @@ public class OgretmenRepo
         return ogretmen;
     }
 
-    public boolean deleteById( int id)
+    public boolean deleteById(int id)
     {
         // spring boot 'da başka bişey yapbiliriz int döndürüp
         String sql = "delete from BILGE.OGRETMEN where ID = :ID";
